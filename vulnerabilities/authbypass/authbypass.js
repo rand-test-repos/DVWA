@@ -7,8 +7,8 @@ function show_save_result (data) {
 }
 	
 function submit_change(id) {
-	first_name = document.getElementById('first_name_' + id).value
-	surname = document.getElementById('surname_' + id).value
+	const first_name = document.getElementById('first_name_' + id).value
+	const surname = document.getElementById('surname_' + id).value
 
 	fetch('change_user_details.php', {
 		method: 'POST',
@@ -34,7 +34,7 @@ function populate_form() {
 			return;
 		}
 		const users = JSON.parse (this.responseText);
-		table_body = document.getElementById('user_table').getElementsByTagName('tbody')[0];
+		const table_body = document.getElementById('user_table').getElementsByTagName('tbody')[0];
 		users.forEach(updateTable);
 
 		function updateTable (user) {
