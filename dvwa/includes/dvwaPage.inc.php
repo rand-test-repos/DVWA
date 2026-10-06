@@ -57,7 +57,7 @@ function dvwa_start_session() {
 	}
 
 	$maxlifetime = 86400;
-	$secure = false;
+	$secure = true;
 	$domain = parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST);
 
 	/*
@@ -223,7 +223,7 @@ function dvwaSecurityLevelSet( $pSecurityLevel ) {
 		$httponly = false;
 	}
 
-	setcookie( 'security', $pSecurityLevel, 0, "/", "", false, $httponly );
+	setcookie( 'security', $pSecurityLevel, 0, "/", "", true, $httponly );
 	$_COOKIE['security'] = $pSecurityLevel;
 }
 
