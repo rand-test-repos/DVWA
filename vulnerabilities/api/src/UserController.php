@@ -98,6 +98,12 @@ class UserController
 	
 	private function getUser($id)
 	{
+		if (!$this->checkToken()) {
+			$response['status_code_header'] = 'HTTP/1.1 401 Unauthorized';
+			$response['body'] = json_encode (array ("status" => "Invalid or missing token"));
+			return $response;
+		}
+
 		if (!array_key_exists ($id, $this->data)) {
 			$gc = new GenericController("notFound");
 			$gc->processRequest();
