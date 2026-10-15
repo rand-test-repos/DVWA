@@ -37,6 +37,20 @@ class UserController
 		$this->version = $version;
 	}
 
+	private function checkToken() {
+		if (array_key_exists ("HTTP_AUTHORIZATION", $_SERVER)) {
+			$header = $_SERVER['HTTP_AUTHORIZATION'];
+			$bits = explode (" ", $header);
+			if (count ($bits) == 2) {
+				if (strtolower($bits[0]) == "bearer") {
+					return (Login::check_access_token($bits[1]));
+				}
+			}
+		}
+
+		return false;
+	}
+
 	private function validateAdd($input)
 	{
 		if (! isset($input['name'])) {
@@ -84,6 +98,12 @@ class UserController
 	
 	private function getUser($id)
 	{
+		if (!$this->checkToken()) {
+			$response['status_code_header'] = 'HTTP/1.1 401 Unauthorized';
+			$response['body'] = json_encode (array ("status" => "Invalid or missing token"));
+			return $response;
+		}
+
 		if (!array_key_exists ($id, $this->data)) {
 			$gc = new GenericController("notFound");
 			$gc->processRequest();
@@ -113,6 +133,12 @@ class UserController
     ]  
 
 	private function getAllUsers() {
+		if (!$this->checkToken()) {
+			$response['status_code_header'] = 'HTTP/1.1 401 Unauthorized';
+			$response['body'] = json_encode (array ("status" => "Invalid or missing token"));
+			return $response;
+		}
+
 		$response['status_code_header'] = 'HTTP/1.1 200 OK';
 		$all = array();
 		foreach ($this->data as $user) {
